@@ -71,6 +71,7 @@ fn get_token(file_name: &str) -> Result<String> {
 async fn main() {
     // Discord Bot Token を設定
     let token = get_token("config.json").expect("Err トークンが見つかりません");
+
     // コマンド系の設定
     let framework = StandardFramework::new()
         // |c| c はラムダ式
@@ -78,8 +79,9 @@ async fn main() {
         .help(&MY_HELP) // ヘルプコマンドを追加
         .group(&GENERAL_GROUP); // general を追加するには,GENERAL_GROUP とグループ名をすべて大文字にする
 
+    let intents = GatewayIntents::GUILD_MESSAGES | GatewayIntents::MESSAGE_CONTENT;
     // Botのクライアントを作成
-    let mut client = Client::builder(&token, GatewayIntents::default())
+    let mut client = Client::builder(&token, intents)
         .event_handler(Handler) // 取得するイベント
         .framework(framework) // コマンドを登録
         .await
